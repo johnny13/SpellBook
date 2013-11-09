@@ -1,13 +1,13 @@
 #Magick in your Markdown
 
-Magick Mirror is a very minimal markdown editor. It uses hui and jQuery to acheive a responsive layout. The plugin will function on smartphones, tablets, and any modern web browser. supports microsoft IE8 and up.
+SpellBook is a very minimal markdown editor. It uses hui and jQuery to acheive a responsive layout. The plugin will function on smartphones, tablets, and any modern web browser. supports microsoft IE8 and up.
 
-This is an hui plugin, and requires that jQuery and hui both be loaded.
+SpellBook is an hui plugin, and requires that jQuery and hui both be loaded.
 
-## Magick Mirror Details
+## SpellBook Details
 Markdown Editor that is based on Showdown, but **NOT** on WMD. The idea is to make a lightweight, jQuery-based editor with most of the features but none of the baggage. The result is an uncompressed 8KB **featherweight** file. 
 
-You can see a live demo [here](http://hui.huement.com/labs/MagickMirror).
+You can see a live demo [here](http://hui.huement.com/labs/SpellBook).
 
 ## Features
 
