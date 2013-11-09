@@ -37,25 +37,22 @@ $.fn.markdownEditor = function(options) {
 	
 	options = $.extend({
 		historyRate: 2000,
-		leftSide: 0,
-		rightSide: 0,
-		TipIt:0,
 		renderRate: 300,
-		buttons: [ 'font', 'bold', 'italic', 'quote-right', 'cloud', 'link', 'picture', 'list-ul', 'reply', 'share-alt', 'info-sign' ],
+		buttons: [ 'b', 'i', 'a', 'blockquote', 'code', 'img', 'h', 'ul', 'undo', 'redo', 'help' ],
 		resources: {
-			'icon-bold': 'Bold',
-			'icon-italic': 'Italic',
-			'icon-link': 'Create link',
-			'icon-quote-right': 'Quote',
-			'icon-cloud': 'Code',
-			'icon-picture': 'Add image',
-			'icon-font': 'Header',
-			'icon-list-ul': 'Bullet list',
-			'icon-reply': 'Undo',
-			'icon-share-alt': 'Redo',
-			'icon-info-sign': 'Help',
-			'icon-ok': 'Accept',
-			'icon-minus-sign': 'Cancel'
+			'md-btn-b': 'Bold',
+			'md-btn-i': 'Italic',
+			'md-btn-a': 'Create link',
+			'md-btn-blockquote': 'Quote',
+			'md-btn-code': 'Code',
+			'md-btn-img': 'Add image',
+			'md-btn-h': 'Header',
+			'md-btn-ul': 'Bullet list',
+			'md-btn-undo': 'Undo',
+			'md-btn-redo': 'Redo',
+			'md-btn-help': 'Help',
+			'md-btn-accept': 'Accept',
+			'md-btn-cancel': 'Cancel'
 		}
 	}, options);
 	
@@ -72,40 +69,17 @@ $.fn.markdownEditor = function(options) {
 
 		// creates the HTML code for a button
 		createButton = function(button) {
-			var name = 'icon-' + button;
-			var theid = 'Magick-' + button;
-			if(options.TipIt!=0){
-				if(button == "bold"){ theid += " "+"left"; }
-				if(button == "italic"){ theid += " "+"right"; }
-				if(button == "quote-right"){ theid += " "+"left"; }
-				if(button == "cloud"){ theid += " "+"right"; }
-				
-				return '<a class="button ' + theid + " "+ options.TipIt + '" title="' + options.resources[name] + '"><span class="fa-icon icon-' + button + '"></span></a>';
-			} else {
-				return '<a class="button ' + theid + '" title="' + options.resources[name] + '"><span class="fa-icon icon-' + button + '"></span></a>';
-			}
+			var name = 'md-btn-' + button;
+			return '<a class="md-btn ' + name + '" title="' + options.resources[name] + '"><span class="md-icon md-icon-' + button + '">' + options.resources[name] + '</span></a>'
 		}
-		
-		var rst = (new Date).getTime();
-		
-		if(options.leftSide!=0){
-			// container of the whole thing
-			
-			$container = $('<div class="markdown-container"><div id="'+options.topSide+'"><input class="button" id="'+options.topTitle+'" type="text" x-webkit-speech="" speech="" autofocus="" value="untitled note"/><div class="markdown-toolbar"></div></div><div id="'+options.leftSide+'"><textarea class="markdown-editor" id="'+rst+'"></textarea><div class="push fixBlock"></div></div><div id="'+options.rightSide+'"><div class="markdown-preview"></div><div class="push fixBlock"></div></div></div>'),
-			$toolbar = $container.find('.markdown-toolbar'),
-			$editor = $container.find('.markdown-editor'),
-			$preview = $container.find('.markdown-preview')
-			;
-		} else {
-			// container of the whole thing
-			$container = $('<div class="markdown-container"><div class="markdown-toolbar"></div><textarea class="markdown-editor" id="'+rst+'"></textarea><div class="markdown-preview"></div></div>'),
-			$toolbar = $container.find('.markdown-toolbar'),
-			$editor = $container.find('.markdown-editor'),
-			$preview = $container.find('.markdown-preview')
-			;
-		}
-		
-		
+
+		// container of the whole thing
+		$container = $('<div class="markdown-container"><div class="markdown-toolbar"></div><textarea class="markdown-editor"></textarea><div class="markdown-preview"></div></div>'),
+		$toolbar = $container.find('.markdown-toolbar'),
+		$editor = $container.find('.markdown-editor'),
+		$preview = $container.find('.markdown-preview')
+		;
+
 	/*
 		getSelection extracted from fieldSelection jQuery plugin by Alex Brem <alex@0xab.cd>
 	*/
@@ -281,8 +255,8 @@ $.fn.markdownEditor = function(options) {
 	$.each(options.buttons, function(index, button) {
 		$toolbar.append(createButton(button));
 	});
-	var $undoBtn = $toolbar.find('.icon-reply');
-	var $redoBtn = $toolbar.find('.icon-share-alt');
+	var $undoBtn = $toolbar.find('.md-btn-undo');
+	var $redoBtn = $toolbar.find('.md-btn-redo');
 
 	/**
 		asks the user for a link title and href
@@ -318,8 +292,8 @@ $.fn.markdownEditor = function(options) {
 			.hide()
 			.after($linkForm);
 		$linkForm
-			.on('click', '.icon-ok', accept)
-			.on('click', '.icon-minus-sign', cancel)
+			.on('click', '.md-btn-accept', accept)
+			.on('click', '.md-btn-cancel', cancel)
 			.on('keyup', '.md-input', function(e) {
 				if (e.keyCode === 13)
 					accept();
@@ -357,7 +331,7 @@ $.fn.markdownEditor = function(options) {
 
 	var commands = [
 		{
-			cmd: 'bold',
+			cmd: 'b',
 			handler: function() {
 				updateSelection({
 					modify: function(value) {
@@ -369,7 +343,7 @@ $.fn.markdownEditor = function(options) {
 			}
 		},
 		{
-			cmd: 'italic',
+			cmd: 'i',
 			handler: function() {
 				updateSelection({
 					modify: function(value) {
@@ -381,7 +355,7 @@ $.fn.markdownEditor = function(options) {
 			}
 		},
 		{
-			cmd: 'link',
+			cmd: 'a',
 			shortcut: '⌘+k, ctrl+k',
 			handler: function() {
 				addLink(function(title, href) {
@@ -390,7 +364,7 @@ $.fn.markdownEditor = function(options) {
 			}
 		},
 		{
-			cmd: 'cloud',
+			cmd: 'code',
 			shortcut: 'shift+⌘+p, shift+ctrl+p',
 			handler: function() {
 				updateSelection({
@@ -403,7 +377,7 @@ $.fn.markdownEditor = function(options) {
 			}
 		},
 		{
-			cmd: 'quote-right',
+			cmd: 'blockquote',
 			shortcut: '⌘+\', ctrl+\'',
 			handler: function() {
 				updateSelection({
@@ -420,7 +394,7 @@ $.fn.markdownEditor = function(options) {
 			}
 		},
 		{
-			cmd: 'picture',
+			cmd: 'img',
 			shortcut: 'shift+⌘+i, shift+ctrl+i',
 			handler: function() {
 				addLink(function(title, href) {
@@ -429,7 +403,7 @@ $.fn.markdownEditor = function(options) {
 			}
 		},
 		{
-			cmd: 'font',
+			cmd: 'h',
 			handler: function() {
 				updateSelection({
 					modify: function(value) {
@@ -442,7 +416,7 @@ $.fn.markdownEditor = function(options) {
 			}
 		},
 		{
-			cmd: 'list-ul',
+			cmd: 'ul',
 			shortcut: 'shift+⌘+l, shift+ctrl+l',
 			handler: function() {
 				updateSelection({
@@ -459,21 +433,20 @@ $.fn.markdownEditor = function(options) {
 			}
 		},
 		{
-			cmd: 'reply', //really undo
+			cmd: 'undo',
 			shortcut: '⌘+z, ctrl+z',
 			handler: popHistory
 		},
 		{
-			cmd: 'share-alt', //really redo
+			cmd: 'redo',
 			shortcut: '⌘+y, ctrl+y',
 			handler: redoHistory
 		},
 		{
-			cmd: 'info-sign',
+			cmd: 'help',
 			shortcut: 'shift+⌘+h, shift+ctrl+h',
 			handler: function() {
-				jQuery.facebox({ div: '#markup_help_box' });
-				console.debug("This");
+				window.open('http://en.wikipedia.org/wiki/Markdown');
 			}
 		}
 	];
@@ -492,7 +465,7 @@ $.fn.markdownEditor = function(options) {
 		;
 
 		// mouse
-		$toolbar.on('click', '.icon-' + cmd, handler);
+		$toolbar.on('click', '.md-btn-' + cmd, handler);
 
 		// keyboard
 		key(action.shortcut || '⌘+' + cmd + ', ctrl+' + cmd, 'markdown', handler);
@@ -528,10 +501,7 @@ $.fn.markdownEditor = function(options) {
 	$undoBtn.attr('disabled', '')
 
 	this.html($container);
-	
-	if(options.TipIt!=0){
-		jQuery("."+options.TipIt).tipTip();
-	}
+
 }
 
 
