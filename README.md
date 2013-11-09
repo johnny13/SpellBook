@@ -27,11 +27,20 @@ Essentially you configure what toolbar buttons you would like present, and where
 * **resources**: the list of labels to use, in case you need i18n.
 * **buttons**: the list of buttons to display. 
 
-####The default is 
-`[ 'font', 'bold', 'italic',    
-   'quote-right', 'cloud', 'link',    
-   'picture', 'list-ul', 'reply',    
-   'share-alt', 'info-sign' ]`   
+####Default Commands 
+<pre>
+icon-bold         : Bold  
+icon-italic       : Italic  
+icon-link         : Create link  
+icon-quote-right  : Quote  
+icon-cloud        : Code  
+icon-picture      : Add image  
+icon-font         : Header  
+icon-list-ul      : Bullet list  
+icon-reply        : Undo  
+icon-share-alt    : Redo  
+icon-info-sign    : Help  
+</pre>
     
     
 ## Bugs
