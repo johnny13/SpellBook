@@ -90,7 +90,7 @@ html, body {height: 100%; margin: 0}
 }
 #spellbook_settings, #spellbook_settings_inner{
 min-height:50px;
-padding:5px 0px 5px 0px;
+padding:0px 0px 5px 0px;
 }
 #spellbook_settings_inner{
 min-height:45px;
