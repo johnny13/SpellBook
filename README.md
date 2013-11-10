@@ -1,6 +1,6 @@
 #Magick in your Markdown
 
-![Image](../blob/master/public_html/SpellBook-Preview.png?raw=true)
+![Image](https://raw.github.com/johnny13/SpellBook/master/SpellBook-Preview.png)
 &nbsp;&nbsp;
 
 SpellBook is a very minimal markdown editor. It uses hui and jQuery to acheive a responsive layout. The plugin will function on smartphones, tablets, and any modern web browser. supports microsoft IE8 and up.
