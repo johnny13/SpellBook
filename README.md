@@ -1,11 +1,14 @@
 #Magick in your Markdown
 
+![Image](../blob/master/public_html/SpellBook-Preview.png?raw=true)
+&nbsp;&nbsp;
+
 SpellBook is a very minimal markdown editor. It uses hui and jQuery to acheive a responsive layout. The plugin will function on smartphones, tablets, and any modern web browser. supports microsoft IE8 and up.
 
 SpellBook is an hui plugin, and requires that jQuery and hui both be loaded.
 
 ## SpellBook Details
-Markdown Editor that is based on Showdown, but **NOT** on WMD. The idea is to make a lightweight, jQuery-based editor with most of the features but none of the baggage. The result is an uncompressed 8KB **featherweight** file. 
+Markdown Editor that is based on Showdown, but **NOT** on WMD. The idea is to make a lightweight, jQuery-based editor with most of the features but none of the baggage. The result is an tiny 12KB **compressed** javascript file. 
 
 You can see a live demo [here](http://hui.huement.com/labs/SpellBook).
 

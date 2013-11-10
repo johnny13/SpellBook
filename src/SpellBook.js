@@ -39,15 +39,17 @@ $.fn.markdownEditor = function(options) {
 		historyRate: 2000,
 		leftSide: 0,
 		rightSide: 0,
+		fileMenu: 0,
+		settingsMenu: "spellbook_settings",
 		TipIt:0,
 		renderRate: 300,
-		buttons: [ 'font', 'bold', 'italic', 'quote-right', 'cloud', 'link', 'picture', 'list-ul', 'reply', 'share-alt', 'info-sign' ],
+		buttons: [ 'chevron-down', 'cog', 'cloud', 'font', 'bold', 'italic', 'quote-right', 'beaker', 'link', 'picture', 'list-ul', 'reply', 'share-alt', 'info-sign' ],
 		resources: {
 			'icon-bold': 'Bold',
 			'icon-italic': 'Italic',
 			'icon-link': 'Create link',
 			'icon-quote-right': 'Quote',
-			'icon-cloud': 'Code',
+			'icon-beaker': 'Code',
 			'icon-picture': 'Add image',
 			'icon-font': 'Header',
 			'icon-list-ul': 'Bullet list',
@@ -56,6 +58,11 @@ $.fn.markdownEditor = function(options) {
 			'icon-info-sign': 'Help',
 			'icon-ok': 'Accept',
 			'icon-minus-sign': 'Cancel'
+		},
+		funbuttons: {
+			'chevron-down':  'Editor Toggle',
+			'icon-cloud':  'File Menu',
+			'icon-cog':  'Settings'
 		}
 	}, options);
 	
@@ -71,18 +78,54 @@ $.fn.markdownEditor = function(options) {
 		converter = new Showdown.converter(),
 
 		// creates the HTML code for a button
-		createButton = function(button) {
-			var name = 'icon-' + button;
-			var theid = 'Magick-' + button;
-			if(options.TipIt!=0){
+		createButton = function(button,tbox) {
+			if(button=="chevron-down"){
+				//If Mobile Toggle Need Different than editor toolbar stuff.
+				if(tbox=="true"){
+					return '<a class="button button-mobile TBBtn"><span class="fa-icon icon-chevron-down"></span></a>';
+				} else {
+					return '<a class="button button-mobile"><span class="fa-icon icon-chevron-down"></span></a>';
+				}
+			} else {
+				var name = 'icon-' + button;
+				var theid = 'Magick-' + button; //Really a Class
+				var buttonTitle;
+				if(options.funbuttons[name]){
+					//Buttons that arnt used for text editing. Save, Export etc.
+					buttonTitle = options.funbuttons[name];
+					theid += " "+"FunBtn";
+				} else {
+					buttonTitle = options.resources[name];
+				}
+				/* MATCHED BUTTON PAIRS */
+				/* 
+				*
+				* Right now you have to custom configure this with the code. 
+				* TODO: Pass array w/ left right or middle options.
+				*
+				*/
 				if(button == "bold"){ theid += " "+"left"; }
 				if(button == "italic"){ theid += " "+"right"; }
 				if(button == "quote-right"){ theid += " "+"left"; }
-				if(button == "cloud"){ theid += " "+"right"; }
+				if(button == "beaker"){ theid += " "+"right"; }
+				if(button == "reply"){ theid += " "+"left"; }
+				if(button == "share-alt"){ theid += " "+"right"; }
 				
-				return '<a class="button ' + theid + " "+ options.TipIt + '" title="' + options.resources[name] + '"><span class="fa-icon icon-' + button + '"></span></a>';
-			} else {
-				return '<a class="button ' + theid + '" title="' + options.resources[name] + '"><span class="fa-icon icon-' + button + '"></span></a>';
+				//Move File Menu To Right Side of the Screen
+				if(button == "cloud"){ 
+					theid += " "+"FileMenu";
+					return '<a class="button action ' + theid + '" title="' + buttonTitle + '"><span class="fa-icon red icon-' + button + '"></span><span class="label red">File</span></a>';
+				}
+				if(button == "cog"){ 
+					theid += " "+"CogMenu";
+					return '<a class="button ' + theid + '" title="' + buttonTitle + '"><span class="fa-icon icon-' + button + '"></span></a>';
+				}
+				
+				if(options.TipIt!=0){
+					return '<a class="button ' + theid + " "+ options.TipIt + '" title="' + buttonTitle + '"><span class="fa-icon icon-' + button + '"></span></a>';
+				} else {
+					return '<a class="button ' + theid + '" title="' + buttonTitle + '"><span class="fa-icon icon-' + button + '"></span></a>';
+				}
 			}
 		}
 		
@@ -91,8 +134,9 @@ $.fn.markdownEditor = function(options) {
 		if(options.leftSide!=0){
 			// container of the whole thing
 			
-			$container = $('<div class="markdown-container"><div id="'+options.topSide+'"><input class="button" id="'+options.topTitle+'" type="text" x-webkit-speech="" speech="" autofocus="" value="untitled note"/><div class="markdown-toolbar"></div></div><div id="'+options.leftSide+'"><textarea class="markdown-editor" id="'+rst+'"></textarea><div class="push fixBlock"></div></div><div id="'+options.rightSide+'"><div class="markdown-preview"></div><div class="push fixBlock"></div></div></div>'),
+			$container = $('<div class="markdown-container"><div id="'+options.topSide+'"><div class="markdown-ToolBox"><div class="markdown-toolbar"></div></div></div><div id="'+options.leftSide+'"><textarea class="markdown-editor" id="'+rst+'"></textarea></div><div id="'+options.rightSide+'"><div class="markdown-preview"></div><div class="push fixBlock"></div></div></div>'),
 			$toolbar = $container.find('.markdown-toolbar'),
+			$toolbox = $container.find('.markdown-ToolBox'),
 			$editor = $container.find('.markdown-editor'),
 			$preview = $container.find('.markdown-preview')
 			;
@@ -184,6 +228,25 @@ $.fn.markdownEditor = function(options) {
 		/* browser not supported */
 		function() { return null; };
 
+	/* 
+	* WINDOW RESIZE AND VIEWPORT CONTROL FUNCTION
+	*/
+	var detectViewPort = function(){
+	    var viewPortWidth = $(window).width();
+		var newHeight = jQuery(window).height() - jQuery("#"+options.topSide).height();
+		finalHeight = newHeight - 4;
+		jQuery("#"+rst).height(finalHeight);
+	    if (viewPortWidth < 800){
+	    	//Small Screen
+	    } else {
+	    	//Large Screen
+			if(jQuery(".markdown-ToolBox").hasClass("PanelOpen")==true){
+				jQuery(".markdown-ToolBox").removeClass("PanelOpen");
+				jQuery("#"+options.leftSide).removeClass("DropDown");
+				jQuery("#"+options.topSide).removeClass("DropDown");
+			}
+	    }
+	};
 
 	/*
 	 * replaceSelection extracted from fieldSelection jQuery plugin by Alex Brem <alex@0xab.cd>
@@ -279,11 +342,34 @@ $.fn.markdownEditor = function(options) {
 
 	// insert buttons
 	$.each(options.buttons, function(index, button) {
-		$toolbar.append(createButton(button));
+		if(button=="chevron-down"){
+			$toolbar.append(createButton(button));
+			$toolbox.append(createButton(button,"true"));
+		} else if (button=="cloud"||button=="cog"){
+			$toolbox.append(createButton(button));
+		} else {
+			$toolbar.append(createButton(button));
+		}
 	});
 	var $undoBtn = $toolbar.find('.icon-reply');
 	var $redoBtn = $toolbar.find('.icon-share-alt');
-
+	
+	/**
+		Add The Default Settings Menu
+	*/
+	var addSettingsMenu = function() {
+		var settingsHTML = "<div id='"+options.settingsMenu+"'><div id='spellbook_settings_inner'><div class='p10'>";
+		settingsHTML += '<p class="m0 p0 L whiteText" style="padding-top:3px;">&nbsp;<span class="fa-icon icon-cog" style="padding:3px;margin:2px;"></span>&nbsp;Editor Settings</p><a class="button settings_toggle" style="float:right;margin:2px 4px 0px 0px;"><span class="fa-icon icon-arrow-up" style="padding:2px;margin:2px"></span></a><div class="push" style="height:10px;"></div>';
+		
+		//Editor Font Size Buttons
+		settingsHTML += '<div id="SettingsBar"><label for="TheNoteTitle" class="m0 p0 whiteText">Editor Text Size</label><div class="push" style="height:2px;"></div><a class="button left FontButton FBF" id="LessFont"><span class="fa-icon icon-minus-sign"></span></a><a id="RESETFont" class="button middle FontButton"><span class="fa-icon icon-text-height"></span><span class="label">Size</span></a><a id="MoreFont" class="button right FontButton"><span class="fa-icon icon-plus-sign"></span></a><div class="push" style="height:2px;"></div></div>';
+		
+		//Viewport Adjustment
+		settingsHTML += '<div id="ViewBar"><p class="m0 p0 L whiteText" style="padding-top:13px;">&nbsp;<span class="fa-icon icon-columns" style="padding:3px;margin:2px;"></span>&nbsp;Display Mode</p><span class="push" style="height:2px;"></span><a class="button ViewButton FBF on"><span class="label activeD">Vertical</span></a><a class="button ViewButton"><span class="label">Horizontal</span></a><a class="button ViewButton"><span class="label">Full Page</span></a><span class="push" style="height:2px;"></span></div>';
+		
+		settingsHTML += '</div></div></div>';
+		return settingsHTML;
+	};
 	/**
 		asks the user for a link title and href
 	*/
@@ -390,7 +476,7 @@ $.fn.markdownEditor = function(options) {
 			}
 		},
 		{
-			cmd: 'cloud',
+			cmd: 'beaker',
 			shortcut: 'shift+⌘+p, shift+ctrl+p',
 			handler: function() {
 				updateSelection({
@@ -473,11 +559,45 @@ $.fn.markdownEditor = function(options) {
 			shortcut: 'shift+⌘+h, shift+ctrl+h',
 			handler: function() {
 				jQuery.facebox({ div: '#markup_help_box' });
-				console.debug("This");
+			}
+		},
+		{
+			cmd: 'chevron-down',
+			//shortcut: 'shift+⌘+h, shift+ctrl+h',
+			handler: function() {
+				console.debug("this");
+				if(jQuery(".markdown-ToolBox").hasClass("PanelOpen")==true){
+					jQuery(".markdown-ToolBox").removeClass("PanelOpen");
+					jQuery("#"+options.leftSide).removeClass("DropDown");
+					jQuery("#"+options.topSide).removeClass("DropDown");
+				} else {
+					jQuery(".markdown-ToolBox").addClass("PanelOpen");
+					jQuery("#"+options.leftSide).addClass("DropDown");
+					jQuery("#"+options.topSide).addClass("DropDown");
+				}
+			}
+		},
+		{
+			//Simple Hidden Panel Toggle. You would then have a Div with this name in the HTML
+			//And you can easily add whatever hooks you want for export or saving to your app
+			cmd: 'cloud',
+			shortcut: '⌘+s, ctrl+s',
+			handler: function() {
+				jQuery("#"+options.fileMenu).toggleClass("FileShow");
+			}
+		},
+		{
+			//Simple Hidden Panel Toggle. You would then have a Div with this name in the HTML
+			//And you can easily add whatever hooks you want for export or saving to your app
+			cmd: 'cog',
+			shortcut: '⌘+,, ctrl+,',
+			handler: function() {
+				console.debug("options.settingsMenu");
+				jQuery("#"+options.settingsMenu).toggleClass("FileShow");
 			}
 		}
 	];
-
+	
 	// disable the default behaviour of filtering key bindings when we are inside the textarea
 	key.filter = function (event){
 		var tagName = (event.target || event.srcElement).tagName;
@@ -490,12 +610,23 @@ $.fn.markdownEditor = function(options) {
 			cmd = action.cmd,
 			handler = action.handler
 		;
-
-		// mouse
-		$toolbar.on('click', '.icon-' + cmd, handler);
-
-		// keyboard
-		key(action.shortcut || '⌘+' + cmd + ', ctrl+' + cmd, 'markdown', handler);
+		
+		if(cmd!='chevron-down' && cmd!='cloud'){
+			// mouse
+			$toolbar.on('click', '.icon-' + cmd, handler);
+			
+			// keyboard
+			key(action.shortcut || '⌘+' + cmd + ', ctrl+' + cmd, 'markdown', handler);
+		}
+		
+		// Non Markdown Editor Buttons. (Save, Menus etc)
+		if(cmd=='chevron-down'){
+			// mobile menu
+			$toolbox.on('click', '.icon-chevron-down', handler);
+		} else if(cmd=='cloud' || cmd=='cog'){
+			$toolbox.on('click', '.icon-'+ cmd, handler);
+			key(action.shortcut || '⌘+' + cmd + ', ctrl+' + cmd, 'markdown', handler);
+		}
 	}
 
 	$editor
@@ -528,11 +659,62 @@ $.fn.markdownEditor = function(options) {
 	$undoBtn.attr('disabled', '')
 
 	this.html($container);
+
+    detectViewPort();
+	jQuery(window).resize(function () {
+	   detectViewPort();
+	});
 	
 	if(options.TipIt!=0){
 		jQuery("."+options.TipIt).tipTip();
 	}
-}
 
+	if(options.fileToggle){
+		/* Save File Buttons */
+		var filetoggles = ".FileMenu, ."+options.fileToggle;
+		jQuery(filetoggles).on("click",function(ev){
+			ev.preventDefault();
+			jQuery("#"+options.fileMenu).toggleClass("FileShow");
+			return false;
+		});
+	}
+	
+	var FontBase = 14;
+	function SizeFont(fCMD){
+		var theEditorID = "#"+rst;
+		console.debug(theEditorID);
+		var PXSize = jQuery(theEditorID).css("font-size");
+		var NowSize = parseInt(PXSize, 10);
+		console.debug(NowSize);
+		if(fCMD=="RESETFont"){
+			jQuery(theEditorID).css("font-size",FontBase);
+		}
+		if(fCMD=="LessFont"){
+			NowSize--;
+			jQuery(theEditorID).css("font-size",NowSize);
+		}
+		if(fCMD=="MoreFont"){
+			NowSize++;
+			jQuery(theEditorID).css("font-size",NowSize);
+		}
+		
+		detectViewPort();
+	}
+	
+	if(options.settingsMenu=="spellbook_settings"){
+		$toolbox.append(addSettingsMenu);
+		jQuery(".settings_toggle").on("click",function(ev){
+			ev.preventDefault();
+			jQuery("#spellbook_settings").toggleClass("FileShow");
+			return false;
+		});
+		jQuery(".FontButton").on("click",function(ev){
+			ev.preventDefault();
+			var fontCMD = $(this).attr("id");
+			SizeFont(fontCMD);
+			return false;
+		});
+	}
+}
 
 })(jQuery);

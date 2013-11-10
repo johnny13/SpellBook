@@ -1,0 +1,496 @@
+/* BASIC SITE ELEMENTS */
+html, body {height: 100%; margin: 0}
+
+#content {
+  width: 100%; 
+  height: 100%;
+}
+
+.fixBlock {
+  height: 55px;
+}
+
+#top {
+  z-index:400;
+  height: 55px; 
+  position: fixed;
+  top: 0;
+  right:0;
+  left:0;
+  background-color: #D14836;
+  -webkit-transition-duration: 0.3s;
+  -moz-transition-duration: 0.3s;
+  -o-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+}
+
+#left {
+  width: 50%; 
+  height: 100%; 
+  position: fixed;
+  top: 55px;
+  bottom: 0;
+  z-index:99;
+  background:rgb(41,41,41);
+  -webkit-transition-duration: 0.3s;
+  -moz-transition-duration: 0.3s;
+  -o-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+}
+
+#top.DropDown { 
+  height: 75px; 
+}
+
+#left.DropDown {
+  top: 75px;
+}
+
+#right {
+  right: 0; 
+  width: 50%; 
+  height: 90%; 
+  position: fixed;
+  top: 55px;
+  bottom: 0;
+  z-index:99;
+  background-color: #FFFFFF;
+}
+
+#TheNoteTitle {
+  float:none;
+  width:90%;
+  text-align:left;
+  display:block;
+  margin:5px auto 10px auto;
+  position:relative;
+  min-width:200px;
+  font-size:15px;
+}
+#SaveBar {
+  float:none;
+  width:93%;
+  display:block;
+  margin:5px auto 10px auto;
+  position:relative;
+}
+/* File Menu */
+#slideout, #spellbook_settings {
+  position: fixed;
+  top: -450px;
+  left: 0;
+  z-index:800;
+  -webkit-transition-duration: 0.3s;
+  -moz-transition-duration: 0.3s;
+  -o-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+}
+#spellbook_settings {
+	left:50%;
+}
+#spellbook_settings, #spellbook_settings_inner{
+min-height:50px;
+padding:5px 0px 5px 0px;
+}
+#spellbook_settings_inner{
+min-height:45px;
+color:#f0f0f0;
+
+}
+#slideout_inner, #spellbook_settings_inner {
+  position: fixed;
+  top: -450px;
+  right:0;
+  width:50%;
+  -webkit-transition-duration: 0.3s;
+  -moz-transition-duration: 0.3s;
+  -o-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+}
+#slideout_inner {
+	left: 0;
+    background:#0D77B6;
+    border-bottom: 1px solid #2C8AC0;
+}
+#spellbook_settings_inner {
+    background:#47CC4B;
+    border-bottom: 1px solid #29691D;
+	left:50%;
+}
+#slideout.FileShow, #spellbook_settings.FileShow {
+  top:0px;
+  right:0;
+  display:block;
+  z-index:600;
+  width:50%;
+}
+#slideout.FileShow {
+	left:0;
+}
+#spellbook_settings.FileShow {
+	left:50%;
+	right:0;
+}
+#slideout.FileShow #slideout_inner, #spellbook_settings.FileShow #spellbook_settings_inner {
+  left:0;
+  right:0;
+  top:0px;
+}
+#spellbook_settings.FileShow #spellbook_settings_inner {
+  right:0;
+  left:50%;
+  top:0px;
+}
+.FileMenu,.CogMenu {
+  float:right!important;
+}
+.FileButton {
+	padding:0px;
+	margin-left:0px;
+	margin-right:0px;
+	width:30%;
+	display:block;
+	position:relative;
+}
+.FBF { margin-left:1.5%; }
+.FileButton .fa-icon, .FileButton .label {
+	padding:0px;
+	margin:0px;
+}
+.FileButton .fa-icon {
+	padding-top:10px;padding-left:5px;margin-right:-5px;
+}
+.FileButton .label {
+	text-align:right;
+}
+
+/* MARKDOWN EDITOR AND PREVIEW WINDOW */
+.markdown-editor, .markdown-preview {
+  width: 99%;
+  display: block;
+  position:relative;
+  margin:0 auto;
+  overflow: auto;
+}
+.markdown-preview {
+  padding: 5px 0px 0px 3px;
+  background: #FFFFFF;
+  overflow-y: scroll;
+  height:100%;
+  min-height:280px;
+}
+.rows .markdown-editor, .rows .markdown-preview {
+  width: 400px;
+  padding: 10px;
+  height: 200px;
+}
+.markdown-editor {
+  padding: 5px 0px 0px 8px;
+  resize: vertical;
+  border:none;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  border:0;
+  background:rgb(41,41,41);
+  font-family:monospace;
+  font-size:14px;
+  color:#ddd;
+  height:80%;
+  line-height:1.35em;
+  border-radius:0px;
+}
+.markdown-editor:focus {
+  background:rgb(41,41,41);
+  color:#F3F3F3;
+  border:none;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+
+.markdown-toolbar {
+  padding-left:5px;
+}
+.markdown-toolbar .button, .markdown-ToolBox .FunBtn {
+  margin-top:10px;
+}
+.markdown-ToolBox .FunBtn {
+  margin-right:10px;
+}
+.markdown-toolbar .button .fa-icon, .markdown-ToolBox .button.action .label, .markdown-ToolBox .FunBtn .fa-icon {
+  padding:5px;
+}
+.TBBtn, .button-mobile {
+  display:none;
+}
+.md-link-form {
+  border-top: 3px solid #eee;
+  border-bottom: 3px solid #eee;
+  margin: 5px 0;
+  padding: 5px 0;
+}
+.fa-icon[disabled] {
+  opacity: .3;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";
+}
+.fa-icon.red:hover {
+	color:#D14836!important;
+}
+
+.md-input { vertical-align: top; }
+
+input.md-input {
+  border: 1px solid #CCC;
+  padding: 4px 6px;
+  outline: none;
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
+  color: #444;
+  display: inline-block;
+  vertical-align: baseline;
+  min-height: 18px;
+  background: #fff;
+  width: 320px;
+  margin-right: 5px;
+}
+input.md-input:focus {
+  border: 1px solid #AAA;
+  color: #222;
+  -moz-box-shadow: 0 0 3px rgba(0,0,0,.2);
+  -webkit-box-shadow: 0 0 3px rgba(0,0,0,.2);
+  box-shadow: 0 0 3px rgba(0,0,0,.2);
+}
+input[type="text"]:focus {
+   border-color:#000!important;
+   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+   -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+::selection {
+  background: #087185;
+  color: #FFF;
+  text-shadow: none;
+}
+::-moz-selection {
+  background: #087185;
+  color: #FFF;
+  text-shadow: none;
+}
+
+/*
+*
+* MOBILE BREAKDOWN
+*
+*/
+@media screen and (max-width: 800px) {
+  #left {
+    width: 100%; 
+    height: 50%; 
+    float: none; 
+    position:relative;
+    display:inline-block;
+    vertical-align:top;
+    min-height:200px;
+  }
+  #right {
+    height: 50%;
+    float: none;
+    width: 100%; 
+    position:relative;
+    display:inline-block;
+    vertical-align:bottom;
+    min-height:200px;
+  }
+  .markdown-editor {
+    width: 98%;
+    padding: 10px 2px 10px 2px;
+    min-height:260px;
+    height:100%;
+  }
+  #left .fixBlock {
+    height:1px;
+  }
+  .markdown-preview {
+    width: 95%;
+    padding: 5px;
+    overflow: visible;
+    overflow-y: visible;
+  }
+  .button-mobile {
+	  display:block;
+  }
+  .TBBtn {
+    display:block;
+    margin:10px 0px 0px 6px;
+  }
+  .markdown-toolbar .button-mobile .fa-icon {
+  	padding:6px 0px 4px 0px;
+  }
+  .TBBtn .fa-icon {
+    padding:5px 5px 0px 5px;
+    margin:3px auto;
+  }
+  .markdown-ToolBox {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right:0;
+    z-index:300;
+    -webkit-transition-duration: 0.3s;
+    -moz-transition-duration: 0.3s;
+    -o-transition-duration: 0.3s;
+    transition-duration: 0.3s;
+  }
+  .markdown-ToolBox .markdown-toolbar .button {
+    margin-top:3px;
+  }
+  .markdown-ToolBox .markdown-toolbar {
+    position: fixed;
+    top: -150px;
+    left: 0;
+    right:0;
+    background: #D14836;
+    -webkit-transition-duration: 0.3s;
+    -moz-transition-duration: 0.3s;
+    -o-transition-duration: 0.3s;
+    transition-duration: 0.3s;
+  }
+  .markdown-ToolBox.PanelOpen .markdown-toolbar {
+    top: 0px;
+    height:75px;
+  }
+  #spellbook_settings, #spellbook_settings_inner, #spellbook_settings.FileShow, #spellbook_settings.FileShow #spellbook_settings_inner {
+    left:0;
+  }
+  .FBF { margin-left:5px; }
+  .FileButton .label, .FontButton .label, .FontButton .fa-icon {
+	  padding:10px 7px 3px 7px!important;
+	  padding-top:10px!important;
+  }
+  #slideout_inner, #spellbook_settings_inner {
+	width:100%;
+  }
+  #slideout.FileShow, #spellbook_settings.FileShow {
+   left:0px;
+   display:block;
+   z-index:600;
+   min-width:320px;
+   width:95%;
+  }
+}
+
+
+
+/*TOOLTIPS*/
+/* TipTip CSS - Version 1.2 */
+
+#tiptip_holder {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 99999;
+}
+
+#tiptip_holder.tip_top {
+  padding-bottom: 5px;
+}
+
+#tiptip_holder.tip_bottom {
+  padding-top: 5px;
+}
+
+#tiptip_holder.tip_right {
+  padding-left: 5px;
+}
+
+#tiptip_holder.tip_left {
+  padding-right: 5px;
+}
+
+#tiptip_content {
+  font-size: 11px;
+  color: #fff;
+  text-shadow: 0 0 2px #000;
+  padding: 4px 8px;
+  border: 1px solid rgba(255,255,255,0.25);
+  background-color: rgb(25,25,25);
+  background-color: rgba(25,25,25,0.92);
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(transparent), to(#000));
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+}
+
+#tiptip_arrow, #tiptip_arrow_inner {
+  position: absolute;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 6px;
+  height: 0;
+  width: 0;
+}
+
+#tiptip_holder.tip_top #tiptip_arrow {
+  border-top-color: #fff;
+  border-top-color: rgba(255,255,255,0.35);
+}
+
+#tiptip_holder.tip_bottom #tiptip_arrow {
+  border-bottom-color: #fff;
+  border-bottom-color: rgba(255,255,255,0.35);
+}
+
+#tiptip_holder.tip_right #tiptip_arrow {
+  border-right-color: #fff;
+  border-right-color: rgba(255,255,255,0.35);
+}
+
+#tiptip_holder.tip_left #tiptip_arrow {
+  border-left-color: #fff;
+  border-left-color: rgba(255,255,255,0.35);
+}
+
+#tiptip_holder.tip_top #tiptip_arrow_inner {
+  margin-top: -7px;
+  margin-left: -6px;
+  border-top-color: rgb(25,25,25);
+  border-top-color: rgba(25,25,25,0.92);
+}
+
+#tiptip_holder.tip_bottom #tiptip_arrow_inner {
+  margin-top: -5px;
+  margin-left: -6px;
+  border-bottom-color: rgb(25,25,25);
+  border-bottom-color: rgba(25,25,25,0.92);
+}
+
+#tiptip_holder.tip_right #tiptip_arrow_inner {
+  margin-top: -6px;
+  margin-left: -5px;
+  border-right-color: rgb(25,25,25);
+  border-right-color: rgba(25,25,25,0.92);
+}
+
+#tiptip_holder.tip_left #tiptip_arrow_inner {
+  margin-top: -6px;
+  margin-left: -7px;
+  border-left-color: rgb(25,25,25);
+  border-left-color: rgba(25,25,25,0.92);
+}
+
+/* Webkit Hacks  */
+@media screen and (-webkit-min-device-pixel-ratio:0) {  
+  #tiptip_content {
+    padding: 4px 8px 5px 8px;
+    background-color: rgba(45,45,45,0.88);
+  }
+  #tiptip_holder.tip_bottom #tiptip_arrow_inner { 
+    border-bottom-color: rgba(45,45,45,0.88);
+  }
+  #tiptip_holder.tip_top #tiptip_arrow_inner { 
+    border-top-color: rgba(20,20,20,0.92);
+  }
+}
