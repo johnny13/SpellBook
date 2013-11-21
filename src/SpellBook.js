@@ -1,6 +1,11 @@
 /*
-Markdown Editor by Nacho and Carlos Coloma.
-This work is based on showdown by John Fraser and markdown by John Gruber.
+SpellBook - hui's text editor
+
+---- Forked from original work ----
++ Markdown Editor by Nacho and Carlos Coloma
++ Showdown by John Fraser
++ Markdown by John Gruber
+
 The license is MIT. Use it however you please.
 
 Options:
@@ -37,6 +42,7 @@ $.fn.markdownEditor = function(options) {
 	
 	options = $.extend({
 		historyRate: 2000,
+		verticleSplit: false,
 		leftSide: 0,
 		rightSide: 0,
 		fileMenu: 0,
@@ -57,7 +63,7 @@ $.fn.markdownEditor = function(options) {
 			'icon-share-alt': 'Redo',
 			'icon-info-sign': 'Help',
 			'icon-ok': 'Accept',
-			'icon-minus-sign': 'Cancel'
+			'icon-remove': 'Cancel'
 		},
 		funbuttons: {
 			'chevron-down':  'Editor Toggle',
@@ -111,6 +117,13 @@ $.fn.markdownEditor = function(options) {
 				if(button == "reply"){ theid += " "+"left"; }
 				if(button == "share-alt"){ theid += " "+"right"; }
 				
+				if(button == "ok"){
+					return '<a class="button action ' + theid + '" title="' + buttonTitle + '"><span class="fa-icon icon-' + button + '"></span><span class="label">Accept</span></a>';
+				}
+				if(button == "remove"){
+					return '<a class="button action ' + theid + '" title="' + buttonTitle + '" style="float:right;"><span class="fa-icon icon-' + button + '"></span><span class="label">Remove</span></a>';
+				}
+				
 				//Move File Menu To Right Side of the Screen
 				if(button == "cloud"){ 
 					theid += " "+"FileMenu";
@@ -130,25 +143,28 @@ $.fn.markdownEditor = function(options) {
 		}
 		
 		var rst = (new Date).getTime();
-		
+		var containerthing;
 		if(options.leftSide!=0){
 			// container of the whole thing
+			if(options.verticleSplit==false){
+				containerthing = '<div class="markdown-container"><div id="'+options.topSide+'"><div class="markdown-ToolBox"><div class="markdown-toolbar"></div></div></div><div id="'+options.leftSide+'" class="markdown-lefty"><textarea class="markdown-editor" id="'+rst+'"></textarea></div><div id="'+options.rightSide+'" class="markdown-righty"><div class="markdown-preview"></div><div class="push fixBlock"></div></div></div>';
+			} else {
+				$("body").css("overflow","hidden");
+				containerthing = '<div class="markdown-container"><div id="'+options.topSide+'"><div class="markdown-ToolBox"><div class="markdown-toolbar"></div></div></div><div id="'+options.leftSide+'" class="markdown-lefty splitscreen"><textarea class="markdown-editor" id="'+rst+'"></textarea></div><div id="'+options.rightSide+'" class="markdown-righty splitscreen"><div class="markdown-preview"></div><div class="push fixBlock"></div></div></div>';
+			}
 			
-			$container = $('<div class="markdown-container"><div id="'+options.topSide+'"><div class="markdown-ToolBox"><div class="markdown-toolbar"></div></div></div><div id="'+options.leftSide+'"><textarea class="markdown-editor" id="'+rst+'"></textarea></div><div id="'+options.rightSide+'"><div class="markdown-preview"></div><div class="push fixBlock"></div></div></div>'),
+			$container = $(containerthing),
 			$toolbar = $container.find('.markdown-toolbar'),
 			$toolbox = $container.find('.markdown-ToolBox'),
 			$editor = $container.find('.markdown-editor'),
-			$preview = $container.find('.markdown-preview')
-			;
+			$preview = $container.find('.markdown-preview');
 		} else {
 			// container of the whole thing
 			$container = $('<div class="markdown-container"><div class="markdown-toolbar"></div><textarea class="markdown-editor" id="'+rst+'"></textarea><div class="markdown-preview"></div></div>'),
 			$toolbar = $container.find('.markdown-toolbar'),
 			$editor = $container.find('.markdown-editor'),
-			$preview = $container.find('.markdown-preview')
-			;
+			$preview = $container.find('.markdown-preview');
 		}
-		
 		
 	/*
 		getSelection extracted from fieldSelection jQuery plugin by Alex Brem <alex@0xab.cd>
@@ -232,10 +248,13 @@ $.fn.markdownEditor = function(options) {
 	* WINDOW RESIZE AND VIEWPORT CONTROL FUNCTION
 	*/
 	var detectViewPort = function(){
-	    var viewPortWidth = $(window).width();
-		var newHeight = jQuery(window).height() - jQuery("#"+options.topSide).height();
-		finalHeight = newHeight - 4;
-		jQuery("#"+rst).height(finalHeight);
+		if($(".markdown-lefty").hasClass("splitscreen")!=true){
+		    var viewPortWidth = $(window).width();
+			var newHeight = jQuery(window).height() - jQuery("#"+options.topSide).height();
+			finalHeight = newHeight - 4;
+			jQuery("#"+rst).height(finalHeight);
+		}
+	    
 	    if (viewPortWidth < 800){
 	    	//Small Screen
 	    } else {
@@ -365,7 +384,7 @@ $.fn.markdownEditor = function(options) {
 		settingsHTML += '<div id="SettingsBar"><label for="TheNoteTitle" class="m0 p0 whiteText">Editor Text Size</label><div class="push" style="height:2px;"></div><a class="button left FontButton FBF" id="LessFont"><span class="fa-icon icon-minus-sign"></span></a><a id="RESETFont" class="button middle FontButton"><span class="fa-icon icon-text-height"></span><span class="label">Size</span></a><a id="MoreFont" class="button right FontButton"><span class="fa-icon icon-plus-sign"></span></a><div class="push" style="height:2px;"></div></div>';
 		
 		//Viewport Adjustment
-		settingsHTML += '<div id="ViewBar"><p class="m0 p0 L whiteText" style="padding-top:13px;">&nbsp;<span class="fa-icon icon-columns" style="padding:3px;margin:2px;"></span>&nbsp;Display Mode</p><span class="push" style="height:2px;"></span><a class="button ViewButton FBF on"><span class="label activeD">Vertical</span></a><a class="button ViewButton"><span class="label">Horizontal</span></a><a class="button ViewButton"><span class="label">Full Page</span></a><span class="push" style="height:2px;"></span></div>';
+		settingsHTML += '<div id="ViewBar"><p class="m0 p0 L whiteText" style="padding-top:13px;">&nbsp;<span class="fa-icon icon-columns" style="padding:3px;margin:2px;"></span>&nbsp;Display Mode</p><span class="push" style="height:2px;"></span><a id="column_split" href="#" class="button ViewButton ColumnSplit"><span class="label activeD">Vertical</span></a><a id="screen_split" href="#" class="button ViewButton ScreenSplit"><span class="label">Horizontal</span></a><a id="full_split" href="#" class="button ViewButton FullSplit"><span class="label">Full Page</span></a><span class="push" style="height:2px;"></span></div>';
 		
 		settingsHTML += '</div></div></div>';
 		return settingsHTML;
@@ -374,21 +393,21 @@ $.fn.markdownEditor = function(options) {
 		asks the user for a link title and href
 	*/
 	var addLink = function(callback) {
-		var 
-			selection = getSelection().text.replace(/\n/g, '').trim(),
-			$linkForm = $(
-			'<form class="md-link-form" action="#">' +
-				'<input placeholder="Title" type="text" class="md-input md-title">' +
-				'<input placeholder="http://" type="url" class="md-input md-href">' +
-				createButton('accept') + createButton('cancel') +
-			'</form>'
-			),
-			cancel = function() {
+		var selection = getSelection().text.replace(/\n/g, '').trim();
+			
+			var linkForm = '<form class="md-link-form" action="#"><div class="push" style="height:5px"></div><label>Add a New Link</label><div class="push" style="height:5px"></div>' +
+				'<input placeholder="Title" type="text" class="md-input md-title"><div class="push" style="height:5px"></div>' +
+				'<input placeholder="http://" type="url" class="md-input md-href"><div class="push" style="height:10px"></div>' +
+				createButton('ok') + createButton('remove') +
+			'<div class="push" style="height:10px"></div></form>';
+			
+			/*
+			var cancel = function() {
 				$linkForm.remove();
 				$toolbar.show();
 				return false;
-			},
-			accept = function() {
+			};
+			var accept = function() {
 				var $href = $linkForm.find('.md-href'),
 					$title = $linkForm.find('.md-title'),
 					href = $href.val(),
@@ -400,10 +419,13 @@ $.fn.markdownEditor = function(options) {
 				$toolbar.show();
 				return false;
 			};
-		$toolbar
-			.hide()
-			.after($linkForm);
-		$linkForm
+			*/
+		$("#SpellBookNotes").html(linkForm);
+		//$toolbar
+		//	.hide()
+		//	.after($linkForm);
+			
+		/*$linkForm
 			.on('click', '.icon-ok', accept)
 			.on('click', '.icon-minus-sign', cancel)
 			.on('keyup', '.md-input', function(e) {
@@ -411,15 +433,17 @@ $.fn.markdownEditor = function(options) {
 					accept();
 				else if (e.keyCode === 27)
 					cancel();
-			});
+			});*/
+		
 		if (!selection || /^http(s?):\/\//.exec(selection)) {
-			$linkForm.find('.md-href').val(selection);
-			$linkForm.find('.md-title').focus()
+			$("#SpellBookNotes .md-link-form").find('.md-href').val(selection);
+			$("#SpellBookNotes .md-link-form").find('.md-title').focus()
 		} else {
-			$linkForm.find('.md-title').val(selection);
-			$linkForm.find('.md-href').focus()
+			$("#SpellBookNotes .md-link-form").find('.md-title').val(selection);
+			$("#SpellBookNotes .md-link-form").find('.md-href').focus()
 		}
 		
+		jQuery.facebox({ div: '#SpellBookNotes' });
 	};
 
 	/**
@@ -660,7 +684,8 @@ $.fn.markdownEditor = function(options) {
 
 	this.html($container);
 
-    detectViewPort();
+	detectViewPort();
+    //setTimeout("detectViewPort",2000);
 	jQuery(window).resize(function () {
 	   detectViewPort();
 	});
@@ -701,6 +726,37 @@ $.fn.markdownEditor = function(options) {
 		detectViewPort();
 	}
 	
+	function AdjustViewPort(tmode){
+		console.debug(tmode);
+		$(".ViewButton").removeClass("on");
+		
+		//ColumnSplit ScreenSplit FullSplit
+		if(tmode == "screen_split"){
+			console.debug("Splitscreen");
+			
+			$(".ScreenSplit").addClass("on");
+			
+			if($("#"+options.leftSide).hasClass("splitscreen")!=true){
+				$("#"+options.leftSide).addClass("splitscreen");
+			}
+			if($("#"+options.rightSide).hasClass("splitscreen")!=true){
+				$("#"+options.rightSide).addClass("splitscreen");
+			}
+			
+		} else if(tmode=="column_split"){
+			console.debug("Column Split");
+			$(".ColumnSplit").addClass("on");
+			
+			if($("#"+options.leftSide).hasClass("splitscreen")==true){
+				$("#"+options.leftSide).removeClass("splitscreen");
+			}
+			if($("#"+options.rightSide).hasClass("splitscreen")==true){
+				$("#"+options.rightSide).removeClass("splitscreen");
+			}
+			
+		}
+	}
+	
 	if(options.settingsMenu=="spellbook_settings"){
 		$toolbox.append(addSettingsMenu);
 		jQuery(".settings_toggle").on("click",function(ev){
@@ -715,6 +771,26 @@ $.fn.markdownEditor = function(options) {
 			return false;
 		});
 	}
+	
+	jQuery(".ViewButton").removeClass("on");
+	//ColumnSplit ScreenSplit FullSplit
+	if($("#"+options.leftSide).hasClass("splitscreen")==true){
+		console.debug("Splitscreen");
+		//Splitscreen
+		jQuery(".ScreenSplit").addClass("on");
+	} else if($("#"+options.leftSide).html()!=undefined) {
+		//Columns
+		console.debug("Columns");
+		jQuery(".ColumnSplit").addClass("on");
+	}
+	jQuery(".ViewButton").on("click",function(ev){
+		ev.preventDefault();
+		var theid = $(this).attr("id");
+		AdjustViewPort(theid);
+	});
+	
+	//Setup Empty Div to Modify things on the fly.
+	jQuery(".markdown-container").append("<div class='none' id='SpellBookNotes'></div>");
 }
 
 })(jQuery);

@@ -29,8 +29,13 @@ Essentially you configure what toolbar buttons you would like present, and where
 * **renderRate**: the same concept applied to rendering preview HTML. The default is 300.
 * **resources**: the list of labels to use, in case you need i18n.
 * **buttons**: the list of buttons to display. 
+* **fbuttons**: function buttons not related to markdown formating (save, export etc)
+* **Layout Options**: Top, Left & Right Side Settings. Set default splitscreen view.
+* **Dropdown Menus**: Editor Settings and a File Menu
+* **ToolTips**: Add tooltip helpers to any toolbar button. 
 
-####Default Commands 
+####Markdown Commands 
+These are the various toolbar buttons you can add. These buttons only deal with editing markdown text.
 <pre>
 icon-bold         : Bold  
 icon-italic       : Italic  
