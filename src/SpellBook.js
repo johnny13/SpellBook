@@ -150,7 +150,7 @@ $.fn.markdownEditor = function(options) {
 		var rst = (new Date).getTime();
 		var containerthing;
 		if(options.leftSide!=0){
-			$("body").css("overflow","hidden");
+			//$("body").css("overflow","hidden");
 			
 			// container of the whole thing
 			if(options.screenSplit=="tall"){
@@ -269,7 +269,7 @@ $.fn.markdownEditor = function(options) {
 		}
 		var viewPortWidth = $(window).width();
 	    if (viewPortWidth < 800){
-			console.debug("x2 full_split");
+			//console.debug("x2 full_split");
 			if(jQuery("#"+options.rightSide).hasClass("fullscreen")!=true){
 				CleanViewPort();
 				$("#"+options.rightSide).hide();
@@ -287,7 +287,7 @@ $.fn.markdownEditor = function(options) {
 			}
 			if(jQuery("#"+options.rightSide).hasClass("fullscreen")==true){
 				var vsCookie = $.cookie('spellbook_vc');
-				console.debug(vsCookie);
+				//console.debug(vsCookie);
 				if(vsCookie != undefined && vsCookie != "full"){
 					AdjustViewPort(vsCookie);
 				}
@@ -386,6 +386,47 @@ $.fn.markdownEditor = function(options) {
 			$preview.html(converter.makeHtml(e.value));
 		}
 	}
+	
+	var BrowserDetect = 
+	{
+	    init: function () 
+	    {
+	        this.browser = this.searchString(this.dataBrowser) || "Other";
+	        this.version = this.searchVersion(navigator.userAgent) ||       this.searchVersion(navigator.appVersion) || "Unknown";
+	    },
+
+	    searchString: function (data) 
+	    {
+	        for (var i=0 ; i < data.length ; i++)   
+	        {
+	            var dataString = data[i].string;
+	            this.versionSearchString = data[i].subString;
+
+	            if (dataString.indexOf(data[i].subString) != -1)
+	            {
+	                return data[i].identity;
+	            }
+	        }
+	    },
+
+	    searchVersion: function (dataString) 
+	    {
+	        var index = dataString.indexOf(this.versionSearchString);
+	        if (index == -1) return;
+	        return parseFloat(dataString.substring(index+this.versionSearchString.length+1));
+	    },
+
+	    dataBrowser: 
+	    [
+	        { string: navigator.userAgent, subString: "Chrome",  identity: "Chrome" },
+	        { string: navigator.userAgent, subString: "MSIE",    identity: "Explorer" },
+	        { string: navigator.userAgent, subString: "Firefox", identity: "Firefox" },
+	        { string: navigator.userAgent, subString: "Safari",  identity: "Safari" },
+	        { string: navigator.userAgent, subString: "Opera",   identity: "Opera" }
+	    ]
+
+	};
+	BrowserDetect.init();
 
 	// insert buttons
 	$.each(options.buttons, function(index, button) {
@@ -412,7 +453,7 @@ $.fn.markdownEditor = function(options) {
 		settingsHTML += '<div id="SettingsBar"><label for="TheNoteTitle" class="m0 p0 whiteText">Editor Text Size</label><div class="push" style="height:2px;"></div><a class="button left FontButton FBF" id="LessFont"><span class="fa-icon icon-minus-sign"></span></a><a id="RESETFont" class="button middle FontButton"><span class="fa-icon icon-text-height"></span><span class="label">Size</span></a><a id="MoreFont" class="button right FontButton"><span class="fa-icon icon-plus-sign"></span></a><div class="push" style="height:2px;"></div></div>';
 		
 		//Viewport Adjustment
-		settingsHTML += '<div id="ViewBar"><p class="m0 p0 L whiteText" style="padding-top:13px;">&nbsp;<span class="fa-icon icon-columns" style="padding:3px;margin:2px;"></span>&nbsp;Display Mode</p><span class="push" style="height:2px;"></span><a id="column_split" href="#" class="button ViewButton ColumnSplit"><span class="label activeD">Vertical</span></a><a id="screen_split" href="#" class="button ViewButton ScreenSplit"><span class="label">Horizontal</span></a><a id="full_split" href="#" class="button ViewButton FullSplit"><span class="label">Full Page</span></a><span class="push" style="height:2px;"></span></div>';
+		settingsHTML += '<div id="ViewBar" class="smallHide"><p class="m0 p0 L whiteText" style="padding-top:13px;">&nbsp;<span class="fa-icon icon-columns" style="padding:3px;margin:2px;"></span>&nbsp;Display Mode</p><span class="push" style="height:2px;"></span><a id="column_split" href="#" class="button ViewButton ColumnSplit"><span class="label activeD">Vertical</span></a><a id="screen_split" href="#" class="button ViewButton ScreenSplit"><span class="label">Horizontal</span></a><a id="full_split" href="#" class="button ViewButton FullSplit"><span class="label">Full Page</span></a><span class="push" style="height:2px;"></span></div>';
 		
 		settingsHTML += '</div></div></div>';
 		return settingsHTML;
@@ -421,7 +462,12 @@ $.fn.markdownEditor = function(options) {
 		asks the user for a link title and href
 	*/
 	var addLink = function(callback) {
-		var selection = getSelection().text.replace(/\n/g, '').trim();
+		if(BrowserDetect.browser == 'Explorer' && BrowserDetect.version <= 9){
+			var selection = document.selection.createRange();
+		} else {
+			var selection = getSelection().text.replace(/\n/g, '').trim();
+		}
+		
 			
 			var linkForm = '<form class="md-link-form" action="#"><div class="push" style="height:5px"></div><label>Add a New Link</label><div class="push" style="height:5px"></div>' +
 				'<input placeholder="Title" type="text" class="md-input md-title"><div class="push" style="height:5px"></div>' +
@@ -481,7 +527,11 @@ $.fn.markdownEditor = function(options) {
 			var href = $("#facebox .md-href").val();
 			replaceSelection(callback(title, href));
 			pushHistory();
-			jQuery(document).trigger('close.facebox');
+			$.facebox.close();
+		});
+		$("#facebox .Magick-remove").on("click",function(ev){
+			ev.preventDefault();
+			$.facebox.close();
 		});
 	}
 
@@ -628,7 +678,7 @@ $.fn.markdownEditor = function(options) {
 			cmd: 'chevron-down',
 			//shortcut: 'shift+⌘+h, shift+ctrl+h',
 			handler: function() {
-				console.debug("this");
+				//console.debug("this");
 				if(jQuery(".markdown-ToolBox").hasClass("PanelOpen")==true){
 					jQuery(".markdown-ToolBox").removeClass("PanelOpen");
 					jQuery("#"+options.leftSide).removeClass("DropDown");
@@ -655,7 +705,7 @@ $.fn.markdownEditor = function(options) {
 			cmd: 'cog',
 			shortcut: '⌘+,, ctrl+,',
 			handler: function() {
-				console.debug(options.settingsMenu);
+				//console.debug(options.settingsMenu);
 				jQuery("#"+options.settingsMenu).toggleClass("FileShow");
 			}
 		}
@@ -740,10 +790,10 @@ $.fn.markdownEditor = function(options) {
 	var FontBase = 14;
 	function SizeFont(fCMD){
 		var theEditorID = "#"+rst;
-		console.debug(theEditorID);
+		//console.debug(theEditorID);
 		var PXSize = jQuery(theEditorID).css("font-size");
 		var NowSize = parseInt(PXSize, 10);
-		console.debug(NowSize);
+		//console.debug(NowSize);
 		if(fCMD=="RESETFont"){
 			NowSize = FontBase;
 			jQuery(theEditorID).css("font-size",FontBase);
@@ -804,7 +854,7 @@ $.fn.markdownEditor = function(options) {
 				$("#"+options.rightSide).addClass("fullscreen");
 			}
 			detectViewPort();
-			AVPLimit = setTimeout(function(){ AVPTimer = 0; console.debug(AVPTimer); },1000);
+			AVPLimit = setTimeout(function(){ AVPTimer = 0; },1000);
 		}
 	}
 	
@@ -845,7 +895,7 @@ $.fn.markdownEditor = function(options) {
 		} else if(theid=="full_split"){
 			thecookie = "full";
 		}
-		console.debug(thecookie);
+		//console.debug(thecookie);
 		$.cookie('spellbook_vc', thecookie, { expires: 364, path: '/' });
 	});
 	$(".spellbook-fulltoggle").on("click",function(ev){
@@ -864,12 +914,12 @@ $.fn.markdownEditor = function(options) {
 	
 	var fsCookie = $.cookie('spellbook_fs');
 	if(fsCookie!=undefined){
-		console.debug(fsCookie);
+		//console.debug(fsCookie);
 		jQuery('.markdown-editor').css("font-size",fsCookie+"px");
 	}
 	var vsCookie = $.cookie('spellbook_vc');
 	if(vsCookie==undefined){
-		console.debug("tall");
+		////console.debug("tall");
 		vsCookie="tall";
 	//	AdjustViewPort("full_split");
 	}

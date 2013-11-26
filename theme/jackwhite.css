@@ -5,7 +5,7 @@
 	background:rgb(41,41,41);
 }
 #right {
-	background-color: #FFFFFF;
+
 }
 #spellbook_settings_inner{
 	color:#f0f0f0;
@@ -23,6 +23,49 @@
 .markdown-preview {
   background: #FFFFFF;
 }
+.markdown-preview h1,
+.markdown-preview h2,
+.markdown-preview h3,
+.markdown-preview h4,
+.markdown-preview h5,
+.markdown-preview h6{
+	margin:13px 0 13px 0px;
+	padding:1px;
+	font-weight:bold;
+}
+.markdown-preview h1{
+	font-size:36px;
+	color:#000;
+}
+
+.markdown-preview h2{
+	font-size:30px;
+	color:#000;
+}
+
+.markdown-preview h3{
+	font-size:24px;
+}
+
+.markdown-preview h4{
+	font-size:18px;
+}
+
+.markdown-preview h5{
+	font-size:14px;
+}
+
+.markdown-preview h6{
+	color:#777;
+	font-size:14px;
+}
+.markdown-preview blockquote p {
+	font-size: 20px;
+	font-weight: 300;
+	line-height: 1.1;
+	padding: 10px 20px 20px 10px;
+}
+
 .markdown-editor {
 	background:rgb(41,41,41);
     color:#ddd;

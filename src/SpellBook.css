@@ -198,11 +198,11 @@ min-height:45px;
   overflow: auto;
 }
 .markdown-preview {
-  padding-top:10px;
-  padding-bottom:10px;
+  padding:0px 0px 0px 5px;
   overflow-y: scroll;
   height:100%;
   min-height:280px;
+  width: 98%;
 }
 .rows .markdown-editor, .rows .markdown-preview {
   width: 400px;
@@ -210,7 +210,7 @@ min-height:45px;
   height: 200px;
 }
 .markdown-editor {
-  padding: 5px 0px 5px 8px;
+  padding: 5px 5px 5px 5px;
   resize: none;
   border:none;
   -webkit-box-shadow: none;
@@ -219,7 +219,7 @@ min-height:45px;
   border:0;
   font-family:monospace;
   font-size:14px;
-  height:82%;
+  height:85%;
   border-radius:0px;
 }
 .markdown-editor:focus {
@@ -381,6 +381,9 @@ form.md-link-form {
    z-index:600;
    min-width:320px;
    width:95%;
+  }
+  .smallHide {
+	  display:none!important;
   }
 }
 
