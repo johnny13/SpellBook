@@ -1,0 +1,79 @@
+#top {
+	background-color: #D14836;
+}
+#left {
+	background:rgb(41,41,41);
+}
+#right {
+	background-color: #FFFFFF;
+}
+#spellbook_settings_inner{
+	color:#f0f0f0;
+}
+#slideout_inner {
+	left: 0;
+    background:#0D77B6;
+    border-bottom: 1px solid #2C8AC0;
+}
+#spellbook_settings_inner {
+    background:#47CC4B;
+    border-bottom: 1px solid #29691D;
+	left:50%;
+}
+.markdown-preview {
+  background: #FFFFFF;
+}
+.markdown-editor {
+	background:rgb(41,41,41);
+    color:#ddd;
+    line-height:1.35em;
+}
+.markdown-editor:focus {
+    background:rgb(41,41,41);
+    color:#F3F3F3;
+}
+.spellbook-fulltoggle {
+	color:#BDBDBD;
+}
+.md-link-form {
+    border-top: 3px solid #eee;
+    border-bottom: 3px solid #eee;
+}
+.fa-icon.red:hover {
+	color:#D14836!important;
+}
+input.md-input {
+	border: 1px solid #CCC;
+	color: #444;
+	background: #fff;
+}
+input.md-input:focus {
+  border: 1px solid #AAA;
+  color: #222;
+  -moz-box-shadow: 0 0 3px rgba(0,0,0,.2);
+  -webkit-box-shadow: 0 0 3px rgba(0,0,0,.2);
+  box-shadow: 0 0 3px rgba(0,0,0,.2);
+}
+input[type="text"]:focus {
+   border-color:#000!important;
+   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+   -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+::selection {
+  background: #087185;
+  color: #FFF;
+  text-shadow: none;
+}
+::-moz-selection {
+  background: #087185;
+  color: #FFF;
+  text-shadow: none;
+}
+.markdown-ToolBox .markdown-toolbar {
+  background: #D14836;
+  -webkit-transition-duration: 0.3s;
+  -moz-transition-duration: 0.3s;
+  -o-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+}

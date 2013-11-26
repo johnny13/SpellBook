@@ -42,7 +42,7 @@ $.fn.markdownEditor = function(options) {
 	
 	options = $.extend({
 		historyRate: 2000,
-		verticleSplit: false,
+		screenSplit: "tall",
 		leftSide: 0,
 		rightSide: 0,
 		fileMenu: 0,
@@ -141,17 +141,30 @@ $.fn.markdownEditor = function(options) {
 				}
 			}
 		}
+		//Cookie Check
+		var viewCookie = $.cookie('spellbook_vc'); // => "the_value"
+		if(viewCookie!=undefined){
+			options.screenSplit=viewCookie;
+		}
 		
 		var rst = (new Date).getTime();
 		var containerthing;
 		if(options.leftSide!=0){
+			$("body").css("overflow","hidden");
+			
 			// container of the whole thing
-			if(options.verticleSplit==false){
-				containerthing = '<div class="markdown-container"><div id="'+options.topSide+'"><div class="markdown-ToolBox"><div class="markdown-toolbar"></div></div></div><div id="'+options.leftSide+'" class="markdown-lefty"><textarea class="markdown-editor" id="'+rst+'"></textarea></div><div id="'+options.rightSide+'" class="markdown-righty"><div class="markdown-preview"></div><div class="push fixBlock"></div></div></div>';
-			} else {
-				$("body").css("overflow","hidden");
-				containerthing = '<div class="markdown-container"><div id="'+options.topSide+'"><div class="markdown-ToolBox"><div class="markdown-toolbar"></div></div></div><div id="'+options.leftSide+'" class="markdown-lefty splitscreen"><textarea class="markdown-editor" id="'+rst+'"></textarea></div><div id="'+options.rightSide+'" class="markdown-righty splitscreen"><div class="markdown-preview"></div><div class="push fixBlock"></div></div></div>';
+			if(options.screenSplit=="tall"){
+				startSplit = "";
+			} 
+			if(options.screenSplit=="wide"){
+				startSplit = "splitscreen";
 			}
+			if(options.screenSplit=="full"){
+				startSplit = "fullscreen";
+			}
+			
+			containerthing = '<div class="markdown-container"><div id="'+options.topSide+'"><div class="markdown-ToolBox"><div class="markdown-toolbar"></div></div></div><div id="'+options.leftSide+'" class="markdown-lefty '+startSplit+'"><textarea class="markdown-editor" id="'+rst+'"></textarea></div><div id="'+options.rightSide+'" class="markdown-righty '+startSplit+'"><div class="markdown-preview"></div><div class="push fixBlock"></div></div></div>';
+			containerthing += '<div class="spellbook-fulltoggle"><span class="fa-icon icon-fullscreen icon-2x"></span></div>';
 			
 			$container = $(containerthing),
 			$toolbar = $container.find('.markdown-toolbar'),
@@ -254,15 +267,30 @@ $.fn.markdownEditor = function(options) {
 			finalHeight = newHeight - 4;
 			jQuery("#"+rst).height(finalHeight);
 		}
-	    
+		var viewPortWidth = $(window).width();
 	    if (viewPortWidth < 800){
-	    	//Small Screen
+			console.debug("x2 full_split");
+			if(jQuery("#"+options.rightSide).hasClass("fullscreen")!=true){
+				CleanViewPort();
+				$("#"+options.rightSide).hide();
+				$(".FullSplit").addClass("on");
+				$(".spellbook-fulltoggle").addClass("fullscreen");
+				$("#"+options.leftSide).addClass("fullscreen");
+				$("#"+options.rightSide).addClass("fullscreen");
+			}
 	    } else {
 	    	//Large Screen
 			if(jQuery(".markdown-ToolBox").hasClass("PanelOpen")==true){
 				jQuery(".markdown-ToolBox").removeClass("PanelOpen");
 				jQuery("#"+options.leftSide).removeClass("DropDown");
 				jQuery("#"+options.topSide).removeClass("DropDown");
+			}
+			if(jQuery("#"+options.rightSide).hasClass("fullscreen")==true){
+				var vsCookie = $.cookie('spellbook_vc');
+				console.debug(vsCookie);
+				if(vsCookie != undefined && vsCookie != "full"){
+					AdjustViewPort(vsCookie);
+				}
 			}
 	    }
 	};
@@ -444,7 +472,18 @@ $.fn.markdownEditor = function(options) {
 		}
 		
 		jQuery.facebox({ div: '#SpellBookNotes' });
+		clickFBLinks(callback);
 	};
+	function clickFBLinks(callback){
+		$("#facebox .Magick-ok").on("click",function(ev){
+			ev.preventDefault();
+			var title = $("#facebox .md-title").val();
+			var href = $("#facebox .md-href").val();
+			replaceSelection(callback(title, href));
+			pushHistory();
+			jQuery(document).trigger('close.facebox');
+		});
+	}
 
 	/**
 		options: 
@@ -616,7 +655,7 @@ $.fn.markdownEditor = function(options) {
 			cmd: 'cog',
 			shortcut: '⌘+,, ctrl+,',
 			handler: function() {
-				console.debug("options.settingsMenu");
+				console.debug(options.settingsMenu);
 				jQuery("#"+options.settingsMenu).toggleClass("FileShow");
 			}
 		}
@@ -684,12 +723,6 @@ $.fn.markdownEditor = function(options) {
 
 	this.html($container);
 
-	detectViewPort();
-    //setTimeout("detectViewPort",2000);
-	jQuery(window).resize(function () {
-	   detectViewPort();
-	});
-	
 	if(options.TipIt!=0){
 		jQuery("."+options.TipIt).tipTip();
 	}
@@ -712,6 +745,7 @@ $.fn.markdownEditor = function(options) {
 		var NowSize = parseInt(PXSize, 10);
 		console.debug(NowSize);
 		if(fCMD=="RESETFont"){
+			NowSize = FontBase;
 			jQuery(theEditorID).css("font-size",FontBase);
 		}
 		if(fCMD=="LessFont"){
@@ -723,37 +757,54 @@ $.fn.markdownEditor = function(options) {
 			jQuery(theEditorID).css("font-size",NowSize);
 		}
 		
+		$.cookie('spellbook_fs', NowSize, { expires: 364, path: '/' });
 		detectViewPort();
 	}
 	
-	function AdjustViewPort(tmode){
-		console.debug(tmode);
+	function CleanViewPort(){
+		if($("#"+options.leftSide).hasClass("fullscreen")==true){
+			$(".spellbook-fulltoggle").removeClass("fullscreen");
+			$("#"+options.leftSide).removeClass("fullscreen");
+			$("#"+options.rightSide).removeClass("fullscreen");
+		}
+		if($("#"+options.leftSide).hasClass("splitscreen")==true){
+			$("#"+options.leftSide).removeClass("splitscreen");
+			$("#"+options.rightSide).removeClass("splitscreen");
+		}
+		if($("#"+options.leftSide).is(":visible")!=true){
+			$("#"+options.leftSide).show();
+		}
+		if($("#"+options.rightSide).is(":visible")!=true){
+			$("#"+options.rightSide).show();
+		}
 		$(".ViewButton").removeClass("on");
-		
-		//ColumnSplit ScreenSplit FullSplit
-		if(tmode == "screen_split"){
-			console.debug("Splitscreen");
-			
-			$(".ScreenSplit").addClass("on");
-			
-			if($("#"+options.leftSide).hasClass("splitscreen")!=true){
+	}
+	
+	var AVPTimer = 0;
+	function AdjustViewPort(tmode){
+		if(AVPTimer==0){
+			AVPTimer++;
+			CleanViewPort();
+			//ColumnSplit ScreenSplit FullSplit
+			if(tmode == "screen_split" || tmode == "wide"){
+				$(".ScreenSplit").addClass("on");
 				$("#"+options.leftSide).addClass("splitscreen");
-			}
-			if($("#"+options.rightSide).hasClass("splitscreen")!=true){
 				$("#"+options.rightSide).addClass("splitscreen");
+				//Fix Editor Height
+				var newwriteheight = ($(window).height()*0.5) - $("#"+options.topSide).height() - 5;
+				$(".markdown-editor").css("height",newwriteheight);
+			} else if(tmode=="column_split" || tmode == "tall"){
+				//Naturally how SpellBook is. no additionall classes need.
+				$(".ColumnSplit").addClass("on");
+			} else if(tmode=="full_split" || tmode == "full"){
+				$("#"+options.rightSide).hide();
+				$(".FullSplit").addClass("on");
+				$(".spellbook-fulltoggle").addClass("fullscreen");
+				$("#"+options.leftSide).addClass("fullscreen");
+				$("#"+options.rightSide).addClass("fullscreen");
 			}
-			
-		} else if(tmode=="column_split"){
-			console.debug("Column Split");
-			$(".ColumnSplit").addClass("on");
-			
-			if($("#"+options.leftSide).hasClass("splitscreen")==true){
-				$("#"+options.leftSide).removeClass("splitscreen");
-			}
-			if($("#"+options.rightSide).hasClass("splitscreen")==true){
-				$("#"+options.rightSide).removeClass("splitscreen");
-			}
-			
+			detectViewPort();
+			AVPLimit = setTimeout(function(){ AVPTimer = 0; console.debug(AVPTimer); },1000);
 		}
 	}
 	
@@ -775,22 +826,59 @@ $.fn.markdownEditor = function(options) {
 	jQuery(".ViewButton").removeClass("on");
 	//ColumnSplit ScreenSplit FullSplit
 	if($("#"+options.leftSide).hasClass("splitscreen")==true){
-		console.debug("Splitscreen");
-		//Splitscreen
 		jQuery(".ScreenSplit").addClass("on");
-	} else if($("#"+options.leftSide).html()!=undefined) {
-		//Columns
-		console.debug("Columns");
+	} else if($("#"+options.leftSide).hasClass("fullscreen")) {
+		jQuery(".FullSplit").addClass("on");
+	} else {
 		jQuery(".ColumnSplit").addClass("on");
 	}
+	
 	jQuery(".ViewButton").on("click",function(ev){
 		ev.preventDefault();
 		var theid = $(this).attr("id");
 		AdjustViewPort(theid);
+		var thecookie; 
+		if(theid=="screen_split"){
+			thecookie = "wide"; 
+		} else if(theid=="column_split"){ 
+			thecookie = "tall";
+		} else if(theid=="full_split"){
+			thecookie = "full";
+		}
+		console.debug(thecookie);
+		$.cookie('spellbook_vc', thecookie, { expires: 364, path: '/' });
+	});
+	$(".spellbook-fulltoggle").on("click",function(ev){
+		ev.preventDefault();
+		if($("#"+options.rightSide).is(":visible")==true){
+			$("#"+options.rightSide).hide();
+			$("#"+options.leftSide).show();
+		} else {
+			$("#"+options.leftSide).hide();
+			$("#"+options.rightSide).show();
+		}
 	});
 	
 	//Setup Empty Div to Modify things on the fly.
 	jQuery(".markdown-container").append("<div class='none' id='SpellBookNotes'></div>");
+	
+	var fsCookie = $.cookie('spellbook_fs');
+	if(fsCookie!=undefined){
+		console.debug(fsCookie);
+		jQuery('.markdown-editor').css("font-size",fsCookie+"px");
+	}
+	var vsCookie = $.cookie('spellbook_vc');
+	if(vsCookie==undefined){
+		console.debug("tall");
+		vsCookie="tall";
+	//	AdjustViewPort("full_split");
+	}
+	
+	AdjustViewPort(vsCookie);
+    //setTimeout("detectViewPort",2000);
+	jQuery(window).resize(function () {
+	   detectViewPort();
+	});
 }
 
 })(jQuery);

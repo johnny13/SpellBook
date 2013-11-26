@@ -12,11 +12,10 @@
  <link href="https://huement.s3.amazonaws.com/code/hui/favicon.ico" title="Icon" type="image/x-icon" rel="shortcut icon">
  <link href="https://huement.s3.amazonaws.com/code/hui/favicon.ico" title="Icon" type="image/x-icon" rel="icon">
  
- <!-- Required hui StyleSheet 
- <link rel="stylesheet" href="http://dev.huement.com/hui/dist/hui-light.css" type="text/css"/>-->
+ <!-- Required hui StyleSheet -->
  <link rel="stylesheet" href="./libs/hui-light.css" type="text/css"/>
- <!-- DEMO THEME BUILDING SETUP -->
  <link rel="stylesheet" href="./src/SpellBook.css">
+ <link rel="stylesheet" href="./theme/bartik.css">
  
  <script src="http://huementui.s3.amazonaws.com/cdn/github/libs/modernizr/modernizr-min.js"></script>
 </head>
@@ -132,10 +131,10 @@
 <script type="text/javascript">
 jQuery(document).ready(function() {
 	jQuery('.cols').markdownEditor({
-		verticleSplit: true,
-		topSide: "top",
+		screenSplit: "tall",
 		fileMenu: "slideout",
 		fileToggle: "file_toggle",
+		topSide: "top",
 		leftSide: "left",
 		TipIt:  "tipTip",
 		rightSide: "right",
