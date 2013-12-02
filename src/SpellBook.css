@@ -45,7 +45,8 @@ html, body {height: 100%; margin: 0}
 #right {
   right: 0; 
   width: 50%; 
-  height: 90%; 
+  height: 90%;
+  overflow: auto; 
   position: fixed;
   top: 55px;
   bottom: 0;
@@ -53,8 +54,7 @@ html, body {height: 100%; margin: 0}
 }
 
 #left.splitscreen {
-  width: 100%; 
-  height: 50%; 
+  width: 100%;  
   position: absolute;
   top: 55px;
 }
@@ -62,9 +62,9 @@ html, body {height: 100%; margin: 0}
   left: 0; 
   bottom: 0;
   width: 100%; 
-  height: 50%; 
   position: absolute;
   top: 50%;
+  overflow-y: scroll;
 }
 #right.fullscreen{
 left: 0;
@@ -107,7 +107,7 @@ width: 100%;
 #slideout, #spellbook_settings {
   position: fixed;
   top: -450px;
-  left: 0;
+  left: 50%;
   z-index:800;
   -webkit-transition-duration: 0.3s;
   -moz-transition-duration: 0.3s;
@@ -135,7 +135,7 @@ min-height:45px;
   transition-duration: 0.3s;
 }
 #slideout_inner {
-	left: 0;
+	left: 50%;
 }
 #spellbook_settings_inner {
 	left:50%;
@@ -148,7 +148,7 @@ min-height:45px;
   width:50%;
 }
 #slideout.FileShow {
-	left:0;
+	left: 50%;
 }
 #spellbook_settings.FileShow {
 	left:50%;
@@ -156,7 +156,7 @@ min-height:45px;
 	z-index:600;
 }
 #slideout.FileShow #slideout_inner, #spellbook_settings.FileShow #spellbook_settings_inner {
-  left:0;
+  left: 50%;
   right:0;
   top:0px;
 }
@@ -198,19 +198,23 @@ min-height:45px;
   overflow: auto;
 }
 .markdown-preview {
-  padding:0px 0px 0px 5px;
-  overflow-y: scroll;
+  padding:0px 0px 0px 0px;
   height:100%;
   min-height:280px;
-  width: 98%;
+  width: 100%;
+  overflow: visible;
 }
+.markdown-preview * {
+	padding-left:10px;
+}
+
 .rows .markdown-editor, .rows .markdown-preview {
   width: 400px;
   padding: 10px;
   height: 200px;
 }
 .markdown-editor {
-  padding: 5px 5px 5px 5px;
+  padding: 2px 2px 2px 2px;
   resize: none;
   border:none;
   -webkit-box-shadow: none;
@@ -228,7 +232,13 @@ min-height:45px;
   -moz-box-shadow: none;
   box-shadow: none;
 }
-
+.splitscreen .markdown-editor{
+	width:98.6%;
+	padding: 2px 5px 0px 10px;
+}
+.splitscreen .markdown-preview {
+	
+}
 .markdown-toolbar {
   padding-left:5px;
 }
@@ -318,8 +328,6 @@ form.md-link-form {
   .markdown-preview {
     width: 95%;
     padding: 5px;
-    overflow: visible;
-    overflow-y: visible;
   }
   .button-mobile {
 	  display:block;
@@ -364,8 +372,11 @@ form.md-link-form {
     top: 0px;
     height:75px;
   }
-  #spellbook_settings, #spellbook_settings_inner, #spellbook_settings.FileShow, #spellbook_settings.FileShow #spellbook_settings_inner {
-    left:0;
+  #spellbook_settings, #spellbook_settings_inner, #spellbook_settings.FileShow, #spellbook_settings.FileShow #spellbook_settings_inner, #slideout_inner, #spellbook_settings_inner, #slideout.FileShow #slideout_inner, #spellbook_settings.FileShow #spellbook_settings_inner {
+    left:0!important;
+  }
+  #slideout_inner, #spellbook_settings_inner, #slideout.FileShow, #spellbook_settings.FileShow, #slideout.FileShow #slideout_inner, #spellbook_settings.FileShow #spellbook_settings_inner {
+  	width: 100%!important;
   }
   .FBF { margin-left:5px; }
   .FileButton .label, .FontButton .label, .FontButton .fa-icon {
@@ -380,7 +391,6 @@ form.md-link-form {
    display:block;
    z-index:600;
    min-width:320px;
-   width:95%;
   }
   .smallHide {
 	  display:none!important;

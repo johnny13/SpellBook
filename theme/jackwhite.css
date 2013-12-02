@@ -11,14 +11,12 @@
 	color:#f0f0f0;
 }
 #slideout_inner {
-	left: 0;
     background:#0D77B6;
     border-bottom: 1px solid #2C8AC0;
 }
 #spellbook_settings_inner {
     background:#47CC4B;
     border-bottom: 1px solid #29691D;
-	left:50%;
 }
 .markdown-preview {
   background: #FFFFFF;
@@ -30,8 +28,11 @@
 .markdown-preview h5,
 .markdown-preview h6{
 	margin:13px 0 13px 0px;
-	padding:1px;
+	padding:1px 0px 1px 10px;
 	font-weight:bold;
+}
+.markdown-preview blockquote {
+	margin-left:10px;
 }
 .markdown-preview h1{
 	font-size:36px;

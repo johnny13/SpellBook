@@ -261,13 +261,30 @@ $.fn.markdownEditor = function(options) {
 	* WINDOW RESIZE AND VIEWPORT CONTROL FUNCTION
 	*/
 	var detectViewPort = function(){
+		var viewPortWidth = $(window).width();
+		
 		if($(".markdown-lefty").hasClass("splitscreen")!=true){
-		    var viewPortWidth = $(window).width();
+		    $("body").css("overflow","auto");
 			var newHeight = jQuery(window).height() - jQuery("#"+options.topSide).height();
 			finalHeight = newHeight - 4;
 			jQuery("#"+rst).height(finalHeight);
+			var halfTWH = jQuery(window).height() - jQuery("#"+options.topSide).height();
+			jQuery("#"+options.leftSide).height(halfTWH);
+			jQuery("#"+options.rightSide).height(halfTWH);
+			console.debug(halfTWH);
+		} else {
+			//topbar height
+			//left = 50% - tbh
+			//right = 50% - thb + top positon = 50% + tbh;
+			var TotalHeight = jQuery(window).height();
+			var tbh = jQuery("#"+options.topSide).height();
+			var halfTWH = TotalHeight / 2;
+			jQuery("#"+options.leftSide).height(halfTWH-tbh);
+			jQuery("#"+options.rightSide).height(halfTWH-5);
+			jQuery("#"+options.rightSide).css("top",halfTWH+5);
+			$("body").css("overflow","hidden");
 		}
-		var viewPortWidth = $(window).width();
+
 	    if (viewPortWidth < 800){
 			//console.debug("x2 full_split");
 			if(jQuery("#"+options.rightSide).hasClass("fullscreen")!=true){
@@ -830,6 +847,16 @@ $.fn.markdownEditor = function(options) {
 		$(".ViewButton").removeClass("on");
 	}
 	
+	function fixColumnHeights(){
+		$("body").css("overflow","auto");
+		var tbh = jQuery("#"+options.topSide).height();
+		var halfTWH = jQuery(window).height() - tbh;
+		jQuery("#"+options.leftSide).height(halfTWH);
+		jQuery("#"+options.rightSide).height(halfTWH);
+		jQuery("#"+options.rightSide).css("top",tbh);
+		console.debug("fixed column height: "+halfTWH);
+	}
+	
 	var AVPTimer = 0;
 	function AdjustViewPort(tmode){
 		if(AVPTimer==0){
@@ -846,12 +873,14 @@ $.fn.markdownEditor = function(options) {
 			} else if(tmode=="column_split" || tmode == "tall"){
 				//Naturally how SpellBook is. no additionall classes need.
 				$(".ColumnSplit").addClass("on");
+				fixColumnHeights();
 			} else if(tmode=="full_split" || tmode == "full"){
 				$("#"+options.rightSide).hide();
 				$(".FullSplit").addClass("on");
 				$(".spellbook-fulltoggle").addClass("fullscreen");
 				$("#"+options.leftSide).addClass("fullscreen");
 				$("#"+options.rightSide).addClass("fullscreen");
+				fixColumnHeights();
 			}
 			detectViewPort();
 			AVPLimit = setTimeout(function(){ AVPTimer = 0; },1000);
