@@ -8,13 +8,15 @@
  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
  <!-- Mobile Related Stuff -->
  <meta content="minimum-scale=1.0, width=device-width, maximum-scale=0.6667, user-scalable=no" name="viewport" />
- <title>SpellBook</title>
- <link href="https://huement.s3.amazonaws.com/code/hui/favicon.ico" title="Icon" type="image/x-icon" rel="shortcut icon">
- <link href="https://huement.s3.amazonaws.com/code/hui/favicon.ico" title="Icon" type="image/x-icon" rel="icon">
+ 
+ <title>SpellBook - A Markdown Editor</title>
+ 
+ <link href="http://huement.s3.amazonaws.com/code/hui/favicon.ico" title="Icon" type="image/x-icon" rel="shortcut icon">
+ <link href="http://huement.s3.amazonaws.com/code/hui/favicon.ico" title="Icon" type="image/x-icon" rel="icon">
  
  <!-- Required hui StyleSheet -->
  <link rel="stylesheet" href="./libs/hui-light.css" type="text/css"/>
- <link rel="stylesheet" href="./src/SpellBook.css?ver=2">
+ <link rel="stylesheet" href="./src/SpellBook.css">
  <link rel="stylesheet" href="./theme/jackwhite.css">
  
  <script src="http://huementui.s3.amazonaws.com/cdn/github/libs/modernizr/modernizr-min.js"></script>
@@ -125,11 +127,12 @@
 <!-- SpellBook Additonal Libraries -->
 <script src="./libs/showdown.js"></script>
 <script src="./libs/keymaster.js"></script>
-<!-- SpellBook Plugin <script src="./dist/SpellBook-min.js"></script> -->
-<script src="./src/SpellBook.js?ver=3"></script>
+<!-- SpellBook Plugin -->
+<script src="./src/SpellBook.js"></script>
 
 <script type="text/javascript">
 jQuery(document).ready(function() {
+	
 	jQuery('.cols').markdownEditor({
 		screenSplit: "tall",
 		fileMenu: "slideout",
@@ -146,6 +149,7 @@ jQuery(document).ready(function() {
 			'UnorderedLists \n\n* Item1 \n* Item2\n\n' +
 			'OrderedLists \n\n1. Item1 \n2. Item2'
 	});
+	
 });
 </script>
 </body>
