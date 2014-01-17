@@ -163,7 +163,7 @@ $.fn.markdownEditor = function(options) {
 				startSplit = "fullscreen";
 			}
 			
-			containerthing = '<div class="markdown-container"><div id="'+options.topSide+'"><div class="markdown-ToolBox"><div class="markdown-toolbar"></div></div></div><div id="'+options.leftSide+'" class="markdown-lefty '+startSplit+'"><textarea class="markdown-editor" id="'+rst+'"></textarea></div><div id="'+options.rightSide+'" class="markdown-righty '+startSplit+'"><div class="markdown-preview"></div><div class="push fixBlock"></div></div></div>';
+			containerthing = '<div class="markdown-container"><div id="'+options.topSide+'"><div class="markdown-ToolBox"><div class="markdown-toolbar"></div></div></div><div id="'+options.leftSide+'" class="markdown-lefty '+startSplit+'"><textarea class="markdown-editor" id="'+rst+'" spellcheck="true" wrap="true"></textarea></div><div id="'+options.rightSide+'" class="markdown-righty '+startSplit+'"><div class="markdown-preview"></div><div class="push fixBlock"></div></div></div>';
 			containerthing += '<div class="spellbook-fulltoggle"><span class="fa-icon icon-fullscreen icon-2x"></span></div>';
 			
 			$container = $(containerthing),
